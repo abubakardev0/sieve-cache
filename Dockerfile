@@ -1,4 +1,4 @@
-FROM golang:1.20-alpine AS builder
+FROM golang:1.22.3-alpine AS builder
 
 ENV CGO_ENABLED=0 \
     GOOS=linux \
@@ -7,12 +7,14 @@ ENV CGO_ENABLED=0 \
 WORKDIR /app
 
 RUN apk add --no-cache git
-COPY go.mod go.sum ./
+
+COPY go.mod ./
+
 RUN go mod download
 
 COPY . .
 
-RUN go build -o sieve-cache ./main.go
+RUN go build -o sieve-cache ./cmd/main.go
 
 FROM alpine:latest
 
